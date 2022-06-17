@@ -19,6 +19,7 @@ function App() {
       title: "",
       body: "",
       id: Date.now(),
+      lastModified: Date.now(),
     };
     setNotes([...notes, newNote]);
     setActiveNote(newNote.id);
@@ -28,18 +29,23 @@ function App() {
     setNotes(notes.filter((note) => note.id !== id));
   };
 
-  const editNote = (id, title, body) => {
-    setNotes(
-      notes.map((note) => (note.id === id ? { ...note, title, body } : note))
-    );
-  };
+  const editNote = (updatedNote) => {
+    const updatedNotesArr = notes.map((note) => {
+      if (note.id === updatedNote.id) {
+        return updatedNote;
+      }
 
-  const setActiveNoteId = (id) => {
-    setActiveNote(id);
+      return note;
+    });
+
+    setNotes(updatedNotesArr);
   };
 
   const getActiveNote = () => {
     return notes.find((note) => note.id === activeNote);
+  };
+  const setActiveNoteId = (id) => {
+    setActiveNote(id);
   };
 
   return (
@@ -53,7 +59,7 @@ function App() {
         setActiveNoteId={setActiveNoteId}
         editNote={editNote}
       />
-      <Main />
+      <Main activeNote={getActiveNote()} editNote={editNote} />
     </div>
   );
 }

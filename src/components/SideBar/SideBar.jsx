@@ -9,6 +9,9 @@ const SideBar = ({
   setActiveNoteId,
   editNote,
 }) => {
+  const sortedNotes = notes.sort((a, b) => {
+    return a.lastModified - b.lastModified;
+  });
   return (
     <div className="app-sidebar">
       <div className="app-sidebar-header">
@@ -16,7 +19,7 @@ const SideBar = ({
         <button onClick={addNote}>Add</button>
       </div>
       <div className="app-sidebar-notes">
-        {notes.map(({ title, body, id }) => (
+        {notes.map(({ title, body, id, lastModified }) => (
           <div
             className={`app-sidebar-note ${id === activeNote && "active"}`}
             onClick={() => setActiveNoteId(id)}
@@ -26,6 +29,17 @@ const SideBar = ({
               <button onClick={() => deleteNote(id)}>Delete</button>
             </div>
             <p>{body.length > 50 ? `${body.substring(0, 50)}...` : body}</p>
+            <small className="note-meta">
+              {new Date(lastModified).toLocaleString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+              })}
+            </small>
           </div>
         ))}
       </div>
